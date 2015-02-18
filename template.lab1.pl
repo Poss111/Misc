@@ -29,14 +29,43 @@ my $trackid;
 my $songid;
 my $artist;
 my $title;
+my @word;
 
 # This loops through each line of the file
 while($line = <INFILE>) {
-		($trackid, $songid, $artist, $title) = split /<SEP>/, $line;
+	($trackid, $songid, $artist, $title) = split /<SEP>/, $line;
+	$title =~ s/[([{\\\/\_\-\"\:\+\=\*].*//g;
+	$title =~ s/.*Act II ://g;
+	$title =~ s/feat..*//g;
+	$title =~ s/Feat..*//g;
+	$title =~ s/vol.*//g;
+	$title =~ s/Vol.*//g;
+	$title =~ s/'//g;
+	$title =~ s/\?//g;
+	$title =~ s/!//g;
+	$title =~ s/\.//g;
+	$title =~ s/;//g;
+	$title =~ s/&//g;
+	$title =~ s/\$//g;
+	$title =~ s/@//g;
+	$title =~ s/%//g;
+	$title =~ s/#//g;
+	$title =~ s/\|//g;
+	if ($title =~ s/.*[^\x00-\x7F].*// || $title =~ m//) {
+	}
+	else {
+		$title = lc $title;
 		push @data, $title;
+		(@word) = split / /, $title;
+		for (k = 0; k < scalar @word; k++) {
+			
+		}
+		print " -> @word \n";
 		$i++;
+	}
 }
 
+print "Filtered words = $i \n";
 # Close the file handle
 close INFILE; 
 
