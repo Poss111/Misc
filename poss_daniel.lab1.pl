@@ -127,12 +127,43 @@ while ($input ne "q"){
 		exit 0;																					# exit 0 exits the program	
 	}
 	else {																						# This else statement is for if the user has entered something other than "q".
-		print "$input";		
-		while ($input ne NULL) { 																# This while loop reads the user input and then prints out the next most common
-			print " ";																			#   word that follows the given word. It will loop until mcw gives a NULL value 
+		push(@checker, $input);																	# @push(@checker, $input) This first push will push the users input to the checker array
+																								#	so that it can be used for the pattern recognition and later the resultant song title
+																								#	generated.
+		while ($input ne NULL) { 																# This while loop reads the user input and then prints out the next most common																		#   word that follows the given word. It will loop until mcw gives a NULL value 
 			$input = mcw($input);																#	stating that the song name has been full generated.
-			print "$input";
-			print " ";
+			push(@checker,$input);																# @push(@checker,$input); This will push the generated word for the song title
+																								#	to the checker array that will be used as the pattern recognition and result for
+																								#	final generated song name.
+			if ($counter >= 3) {																# @if ($counter >= 3) Is used to allow the checker array to be filled up 3 times before
+																								#	the pattern recognition will start to check the latest word generated and the 
+																								#	word that is 2 places behind the latest word generated to see if they match. If they
+																								#   match then it will print out final result of the generated name and let you know a
+																								# 	pattern has been detected and will exit the while loop.
+					my $t3 = pop @checker;														# @my $t3.... This will pop the latest word generated from mcw to be used for pattern recognition.
+					my $t2 = pop @checker;														# @my $t2.... This will pop the word previously generated from mcw so that the word behind it can 
+																								#	can be used.
+					my $t1 = pop @checker;														# @my $t1.... This will pop the word located 2 places behind the latest generated word so that it
+																								#	can then check the latest word generated and this word and see if there is a match. 
+					if ($t1 eq $t3) {															# @if ($t1 eq $t3) This is the pattern recognition that will officially check to see if there is
+																								#	is a pattern that has formed while generating the desired song title. It checks by checking if
+																								#	the latestest and 2 words behind the latest word generated are the same. If they are the same
+																								#	there will be a pattern as well as a loop between these two words so it will go on indefinitely
+																								# 	otherwise. So instead it exits the loop and prints out the resultant song title.
+						print"\n";	
+						push(@checker, $t1);													# @push.... This push will push the 2nd to last word back onto the checker array so that it will
+																								#	be printed with the resulting generated song title.
+						print "Generated Name: @checker \n";									# @print... This prints out the generated song title from the checker array up to the first pattern iteration.
+						print "Pattern found..... Exiting.";									# @print... Lets you know that a pattern has been found and it will be exiting the while loop.
+						$input = NULL;															# Sets $input to NULL so that it will exit the while loop and prompt the user for the next word to use to 
+																								#	to generate.
+					}
+					else {
+						push(@checker, $t1);
+						push(@checker, $t2);
+						push(@checker, $t3);
+					}
+			}
 		}
 		print "\n";
 		@checker =();																			# Re instantiates the checker array so that it can be used for the next user given
@@ -148,38 +179,12 @@ sub mcw{																						#@sub mcw{} This method is the method used to give
 	my $count = 0;																				# @count is used to compare pairs of words to figure out the most common word following given string.																				
 	$string = $_[0];																			# Reads in first given string into function which is the users input.
 	my $followingString;																		# @followingString is the string that is returned which is the most common word following given string.
-	push(@checker, $string);																	# Pushes $string onto checker array to be used for pattern recognition
-	push(@checker, $string);																	# Pushes $string onto checker array to be used for pattern recognition
 	if (%words{$string} == 0 || m/"\s"/) {														# This statement will return NULL if the most common word following the string is invalid.
 		return NULL;
 	}
-	elsif ($counter > 3) {																		# This if statement is to be used if the number of words that have been generated have
-		$tester = pop @checker;																	#	reached three which then the pattern recognition is to be turned on. This will read
-		my $tester2 = $checker[$counter];														# 	in the values that have been generated and determine if a pattern has formed. If it has
-		push(@checker, $tester);																# 	then return NULL.
-		if ($tester eq $tester2) {
-			return NULL;
-		}
-		else {
-			foreach my $keySet2 (keys %{%words{$string}}) {
-				if ($count < $words{$string}{$keySet2}) {
-					$count = $words{$string}{$keySet2};
-					$followingString = $keySet2;
-				}
-				elsif ($count == $words{$string}{$keySet2}) {
-					my $randNum = int(rand(2));
-					if ($randChoice > 0) {
-						$followingString = $keySet2;
-					}
-				}
-			}
-		}
-		$counter++;
-		return $followingString;
-	}
-	else {																						# This else statement is to be used for the first three strings generated for the user input
-		foreach my $keySet2 (keys %{%words{$string}}) {											#	song name. It will read through and determine the most common following string for the 
-			if ($count < $words{$string}{$keySet2}) {											#	input name by comparing bigram counts.
+	else {																						# This else statement is to be used to generate song name for the user input
+		foreach my $keySet2 (keys %{%words{$string}}) {											#	beginning word. It will read through and determine the most common  
+			if ($count < $words{$string}{$keySet2}) {											#	following string for the input name by comparing bigram counts.
 				$count = $words{$string}{$keySet2};
 				$followingString = $keySet2;
 			}
