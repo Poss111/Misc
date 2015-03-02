@@ -1,6 +1,4 @@
-#Daniel Poss
-#Program 1
-#ReadMe
+#Daniel Poss Program 1 ReadMe
 On Load Up:
 -----------
 Program will ask for a picture (.jpg, .png, etc.) to be chosen from the file /program1/ using a file browser. The program will then load up the buffer for the picture with the matching dimensions of the picture i.e. if the picture is 620x980 the buffer will be 620x980. 
