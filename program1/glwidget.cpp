@@ -90,17 +90,23 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
     // not vertex points) rather than pixels.
     // There are devicePixelRatio pixels in a single point, so here
     // we are converting to pixels.
-    QImage image;
-    QLabel label;
-    image.load("car.jpg");
-    label.setPixmap(QPixmap::fromImage(image));
-    hdc = GetDc(label);
-    color[num_pts] = GetPixel(*hdc, event->x, event->y);
+//    QImage image;
+//    QLabel label;
+//    image.load("car.jpg");
+//    label.setPixmap(QPixmap::fromImage(image));
+//    color[num_pts] = GetPixel(*hdc, event->x, event->y);
 
     pts.resize(num_pts+1);
     qreal pixelRatio = this->devicePixelRatio();
     pts[num_pts].x = event->x()*pixelRatio;
     pts[num_pts].y = event->y()*pixelRatio;
+    pts[num_pts+1].x = event->(x()+10)*pixelRatio;
+    pts[num_pts+1].y = event->(y()+10)*pixelRatio;
+    pts[num_pts+2].x = event->(x()+10)*pixelRatio;
+    pts[num_pts+2].y = event->y()*pixelRatio;
+    pts[num_pts+3].x = event->x()*pixelRatio;
+    pts[num_pts+3].y = event->(y()+10)*pixelRatio;
+
 
     cout << "Added point (" << pts[num_pts].x << ", " << pts[num_pts].y << ") " << endl;
 

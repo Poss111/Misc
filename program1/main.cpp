@@ -11,7 +11,10 @@ int main(int argc, char** argv) {
     format.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(format);
 
-
+    QImage image;
+    QLabel label;
+    image.load("car.jpg");
+    label.setPixmap(QPixmap::fromImage(image));
 
     GLWidget glWidget;
     qreal pixelRatio = glWidget.devicePixelRatio();
