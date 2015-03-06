@@ -71,9 +71,12 @@ void GLWidget::initializeGrid() {
     gridProjMatrixLoc = glGetUniformLocation(program, "projection");
 
     // Part 2 - Get any uniform variable locations that you'll need.
+    gridViewMatrixLoc = glGetUniformLocation(program, "view");
 }
 
 void GLWidget::initializeCube() {
+
+    updateViewMatrix();
     // Create a new Vertex Array Object on the GPU which
     // saves the attribute layout of our vertices.
     glGenVertexArrays(1, &cubeVao);
@@ -215,6 +218,7 @@ void GLWidget::initializeCube() {
     cubeProjMatrixLoc = glGetUniformLocation(program, "projection");
 
     // Part 2 & 3 - Get any uniform variable locations that you'll need.
+    cubeViewMatrixLoc = glGetUniformLocation(program, "view");
 }
 
 void GLWidget::initializeGL() {
@@ -236,26 +240,28 @@ void GLWidget::resizeGL(int w, int h) {
     glViewport(0,0,w,h);
 
     float aspect = (float)w/h;
-    float fov = tanf(camAngle/2.0f);
-    float near1 = (float)1.0f;
-    float far1 = (float)130.0f;
-    float range = (float)near1-far1;
+    float angle = (40.0f/180.0f)*M_PI;
+    float fov = 1.0f/tan(angle/2.0f);
+    float nearZ = 1.0f;
+    float farZ = 130.0f;
+    float range = (float)nearZ-farZ;
 
-//    projMatrix = ortho(-5.0f*aspect, 5.0f*aspect, -5.0f, 5.0f, -10.0f, 100.0f);
+/*    projMatrix = ortho(-5.0f*aspect, 5.0f*aspect, -5.0f, 5.0f, -10.0f, 100.0f); */
     // Part 1 - Instead of using ortho, construct your own perspective matrix.
     // Do not use glm::perspective.
-//    projMatrix = glm::mat4(glm::vec4(1.0f/(aspect*fov), 0.0f, 0.0f, 0.0f),
-//                           glm::vec4(0.0f, 1.0f/fov, 0.0f, 0.0f),
-//                           glm::vec4(0.0f, 0.0f, ((-near1-far1)/(near1-far1)), ((2*far1*near1)/(near1-far1))),
-//                           glm::vec4(0.0f, 0.0f, 1.0f, 0.0f));
 
-    projMatrix = glm::perspective(fov, aspect, -10.0f, 100.0f);
+    projMatrix = glm::mat4(glm::vec4(fov/aspect, 0.0f, 0.0f, 0.0f ),
+                           glm::vec4(0.0f, fov, 0.0f, 0.0f),
+                           glm::vec4(0.0f, 0.0f, (farZ+nearZ)/range, -1.0f),
+                           glm::vec4(0.0f, 0.0f, (2*farZ*nearZ)/range, 0.0f));
 
     glUseProgram(cubeProg);
     glUniformMatrix4fv(cubeProjMatrixLoc, 1, false, value_ptr(projMatrix));
 
     glUseProgram(gridProg);
     glUniformMatrix4fv(gridProjMatrixLoc, 1, false, value_ptr(projMatrix));
+
+    updateViewMatrix();
 }
 
 void GLWidget::paintGL() {
@@ -417,4 +423,15 @@ void GLWidget::updateModelMatrix() {
 void GLWidget::updateViewMatrix() {
     // Part 2 - Construct a view matrix and upload as a uniform variable
     // to the cube and grid programs. Update your vertex shader accordingly.
+    glm::vec3 cameraPos(20*cos(camAngle), camY, 20*sin(camAngle));
+    std::cout << "Blah = " << camAngle << "\n";
+    glm::mat4 view = glm::lookAt(cameraPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
+
+    viewMatrix = view;
+
+    glUseProgram(cubeProg);
+    glUniformMatrix4fv(cubeViewMatrixLoc, 1, false, value_ptr(viewMatrix));
+
+    glUseProgram(gridProg);
+    glUniformMatrix4fv(gridViewMatrixLoc, 1, false, value_ptr(viewMatrix));
 }

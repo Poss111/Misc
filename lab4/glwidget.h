@@ -64,14 +64,17 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
         GLuint cubeProg;
         GLuint cubeVao;
         GLint cubeProjMatrixLoc;
+        GLint cubeViewMatrixLoc;
 
         void initializeGrid();
         void renderGrid();
         GLuint gridProg;
         GLuint gridVao;
         GLint gridProjMatrixLoc;
+        GLint gridViewMatrixLoc;
 
         mat4 projMatrix;
+        mat4 viewMatrix;
 };
 
 #endif
