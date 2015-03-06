@@ -75,8 +75,8 @@ void GLWidget::initializeGrid() {
 }
 
 void GLWidget::initializeCube() {
-
     updateViewMatrix();
+    updateModelMatrix();
     // Create a new Vertex Array Object on the GPU which
     // saves the attribute layout of our vertices.
     glGenVertexArrays(1, &cubeVao);
@@ -219,6 +219,7 @@ void GLWidget::initializeCube() {
 
     // Part 2 & 3 - Get any uniform variable locations that you'll need.
     cubeViewMatrixLoc = glGetUniformLocation(program, "view");
+    cubeModelMatrixLoc = glGetUniformLocation(program, "model");
 }
 
 void GLWidget::initializeGL() {
@@ -418,13 +419,46 @@ void GLWidget::updateModelMatrix() {
     // rotation and scale values and upload it as a uniform variable to
     // the cube program (don't use it to change the grid). Update your
     // vertex shader accordingly.
+
+    glm::mat4 translationMat = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, tz));
+//    glm::mat4 rotationMat = glm::rotate(glm::mat4(1.0f), 1.0f, glm::vec3(rx, ry, rz));
+    glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(sx, sy, sz));
+
+    glm::mat4 rotationMatx = glm::mat4(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f),               // 1    0       0       0
+                              glm::vec4(0.0f, cos(rx), sin(rx), 0.0f),                  // 0  cos(x) -sin(x)    0
+                              glm::vec4(0.0f, -sin(rx), cos(rx), 0.0f),                 // 0  sin(x) cos(x)     0
+                              glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));                       // 0    0       0       1
+
+    glm::mat4 rotationMaty = glm::mat4(glm::vec4(cos(ry), 0.0f, -sin(ry), 0.0f),
+                              glm::vec4(0.0f, 1.0f, 0.0f, 0.0f),
+                              glm::vec4(sin(ry), 0.0f, cos(ry), 0.0f),
+                              glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+    glm::mat4 rotationMatz = glm::mat4(glm::vec4(cos(rz), sin(rz), 0.0f, 0.0f),
+                              glm::vec4(-sin(rz), cos(rz), 0.0f, 0.0f),
+                              glm::vec4(0.0f, 0.0f, 1.0f, 0.0f),
+                              glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+    glm::mat4 rotationMat = rotationMatx *rotationMaty * rotationMatz;
+
+
+//    glm::mat4 scalarMat = (glm::vec4(sx, 0.0f, 0.0f, 0.0f),
+//                                glm::vec4(0.0f, sy, 0.0f, 0.0f),
+//                                glm::vec4(0.0f, 0.0f, sz, 0.0f),
+//                                glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+    modelMatrix = translationMat * rotationMat * scaleMat;
+
+    glUseProgram(cubeProg);
+    glUniformMatrix4fv(cubeModelMatrixLoc, 1, false, value_ptr(modelMatrix));
+
 }
 
 void GLWidget::updateViewMatrix() {
     // Part 2 - Construct a view matrix and upload as a uniform variable
     // to the cube and grid programs. Update your vertex shader accordingly.
     glm::vec3 cameraPos(20*cos(camAngle), camY, 20*sin(camAngle));
-    std::cout << "Blah = " << camAngle << "\n";
+
     glm::mat4 view = glm::lookAt(cameraPos, glm::vec3(0,0,0), glm::vec3(0,1,0));
 
     viewMatrix = view;
@@ -435,3 +469,4 @@ void GLWidget::updateViewMatrix() {
     glUseProgram(gridProg);
     glUniformMatrix4fv(gridViewMatrixLoc, 1, false, value_ptr(viewMatrix));
 }
+

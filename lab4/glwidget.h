@@ -11,7 +11,7 @@
 
 using glm::mat4;
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core { 
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     Q_OBJECT
 
     public slots:
@@ -65,6 +65,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
         GLuint cubeVao;
         GLint cubeProjMatrixLoc;
         GLint cubeViewMatrixLoc;
+        GLint cubeModelMatrixLoc;
 
         void initializeGrid();
         void renderGrid();
@@ -75,6 +76,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 
         mat4 projMatrix;
         mat4 viewMatrix;
+        mat4 modelMatrix;
 };
 
 #endif

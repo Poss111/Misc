@@ -1,0 +1,33 @@
+Daniel Poss
+CSCI 305
+lab 1 Q's
+
+Q1: birthday
+Q2:	song
+Q3: 7
+Q4: love
+Q5: 13
+Q6: happy birthday song for the world is a little girl
+Q7: sad song for the world is a little girl in the world
+Q8: hey
+Q9: little girl in the world is a
+Q10: is a little girl in the world is continuously repeating.
+Q11: amore mio babbino caro gianni schicchi
+Q12: love you are
+Q13: little girl i don't know what you are
+Q14: The reason is it looping is because it is jumping back and forth between two words that share their most next word as themselves.
+Q15: Amore is one that does terminate in less than 20 words;
+Q16: The extension was supposed to save the words going into the generated song name into an array and when the name started to show a pattern in
+	 the name such as "you are you are" it would then end it and leave it as is.
+Q17: montana sacra nova baby don't know what you are
+Q18: bob marley medley 1 allegro con la vida es el amor de la vida esl
+Q19: "bob marley is my love you are" is what I get after I try it again. This is different because of the rand attribute when selecting 
+	 the most common word that follows it since when it comes to a tie it just randomly chooses one out of the pair.
+Q20: My favorite song title that I have found is "topless bar star spangled banner waving my love you are". lol
+Q21: I do enjoy the ability to change the variables at will because it allows me to use multiple value types for one variable.
+Q22: The biggest thing I dislike about perl is the way that the arrays are accessed such as other the push and pop, with my experience it 
+	 is very inconsistent.
+Q23: I enjoyed it for the most part but the final fix was a little difficult for me in the sense of trying to get it to work in the way I wanted it while 
+	 as well in the way I needed it to. Much more accustomed to the C and Java way of accessing an array.
+Q24: I spent about 16 hours on this lab but I am not completely sure it is a guesstimate.
+Q25: I probably would use it again but I want to be more accustomed to it before I use it for a project like this or something larger.
