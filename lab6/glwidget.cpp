@@ -262,8 +262,8 @@ void GLWidget::initializeCube() {
     cubeViewMatrixLoc = glGetUniformLocation(program, "view");
     cubeModelMatrixLoc = glGetUniformLocation(program, "model");
     cubeITModelMatrixLoc = glGetUniformLocation(program, "ITModel");
-//    GLuint viewLoc = glGetUniformLocation(program, "viewVec");
-//    glUniform3f(viewLoc, 5, 10, -5);
+    lightLoc = glGetUniformLocation(program, "light");
+    glUniform3f(lightLoc, 5, 5, -10);
 }
 
 void GLWidget::initializeGL() {
@@ -288,7 +288,7 @@ void GLWidget::resizeGL(int w, int h) {
     float aspect = (float)w/h;
 
     projMatrix = perspective(45.0f, aspect, 1.0f, 100.0f);
-    viewMatrix = lookAt(vec3(4, 4, -10),vec3(0,0,0),vec3(0,1,0));
+    viewMatrix = lookAt(vec3(5, 5, -10),vec3(0,0,0),vec3(0,1,0));
     modelMatrix = mat4(1.0f);
     mat4 ITModelMatrix = inverse(modelMatrix);
 
@@ -404,9 +404,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         mat4 r = rotate(mat4(1.0f), angle, axis);
 
         modelMatrix = r*modelMatrix;
-
+        mat4 ItMatrix = inverse(modelMatrix);
         glUseProgram(cubeProg);
         glUniformMatrix4fv(cubeModelMatrixLoc, 1, false, value_ptr(modelMatrix));
+        glUniformMatrix4fv(cubeITModelMatrixLoc, 1, true, value_ptr(ItMatrix));
 
         glUseProgram(gridProg);
         glUniformMatrix4fv(gridModelMatrixLoc, 1, false, value_ptr(modelMatrix));
