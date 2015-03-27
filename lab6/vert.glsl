@@ -11,9 +11,12 @@ in vec3 color;
 out vec4 outPosition;
 out vec4 outNormal;
 out vec3 fcolor;
+out vec3 camLight;
 
 void main() {
   gl_Position = projection * view * model * vec4(position, 1);
+  mat4 IView = inverse(view);
+  camLight = vec3(IView[3][0], IView[3][1], IView[3][2]);
   outPosition = model * vec4(position, 1.0f);
   outNormal = normalize(ITModel * vec4(normal, 0.0f));
   fcolor = color;

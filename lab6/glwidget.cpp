@@ -262,8 +262,6 @@ void GLWidget::initializeCube() {
     cubeViewMatrixLoc = glGetUniformLocation(program, "view");
     cubeModelMatrixLoc = glGetUniformLocation(program, "model");
     cubeITModelMatrixLoc = glGetUniformLocation(program, "ITModel");
-    GLuint lightLoc = glGetUniformLocation(program, "light");
-    glUniform3f(lightLoc, 5, 10, -5);
 //    GLuint viewLoc = glGetUniformLocation(program, "viewVec");
 //    glUniform3f(viewLoc, 5, 10, -5);
 }
@@ -290,7 +288,7 @@ void GLWidget::resizeGL(int w, int h) {
     float aspect = (float)w/h;
 
     projMatrix = perspective(45.0f, aspect, 1.0f, 100.0f);
-    viewMatrix = lookAt(vec3(0, 0, -10),vec3(0,0,0),vec3(0,1,0));
+    viewMatrix = lookAt(vec3(4, 4, -10),vec3(0,0,0),vec3(0,1,0));
     modelMatrix = mat4(1.0f);
     mat4 ITModelMatrix = inverse(modelMatrix);
 
