@@ -11,11 +11,18 @@
 
 (define (member? e lst)
   (if (equal? e (car lst))
-      (display "Provided value is in the list")
+      #t
       (if (null? (cdr lst))
-          (display  "Provided value isn't in provided list.")
-          (member? e (cdr lst)))))
-
-
-(member? 5 '(0 1 2 3 4 5))
+          #f
+      (member? e (cdr lst)))))
   
+(define (set? lst)
+  (if (null? (cdr lst))
+      #t
+  (if (member? (car lst)(cdr lst))
+      #f
+      (set? (cdr lst)))))
+
+(define (union lst1 lst2)
+  
+)
