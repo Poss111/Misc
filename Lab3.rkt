@@ -23,6 +23,11 @@
       #f
       (set? (cdr lst)))))
 
-(define (union lst1 lst2)
-  
-)
+(define (union? lst1 lst2)
+  (if (empty? lst1)
+      (display lst2)
+  (if (empty? lst2)
+      (display lst1)
+      (if (member? (car lst2) lst1)
+          (union? lst1 (cdr lst2))
+          (union? (append lst1 (list (car lst2))) (cdr lst2))))))
